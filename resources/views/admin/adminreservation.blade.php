@@ -10,7 +10,8 @@
       <th scope="col">Date</th>
       <th scope="col">Time</th>
       <th scope="col">Message</th>
-      <th>Action</th>
+      <th scope="col">Guest</th>
+     
     </tr>
   </thead>
   <tbody>
@@ -23,8 +24,7 @@
       <td>{{$value->date}}</td>
       <td>{{$value->time}}</td>
       <td>{{$value->message}}</td>
-      <td><a href="{{url('deletemenu',$value->id)}}">Delete</a></td>
-      <td><a href="{{url('updatemenu',$value->id)}}">Update</a></td>
+     <td>{{$value->guest}}</td>
     </tr>
     @endforeach
   </tbody>

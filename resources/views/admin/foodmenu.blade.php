@@ -1,6 +1,6 @@
 @extends('admin.adminhome')
 @section('content')
-<div style="position:relative;top: 60px;right: -150px;">
+<div style="position:relative;top: 60px;">
 	<form method="post" enctype="multipart/form-data" action="{{url('upload')}}">
 		@csrf
 		<div>

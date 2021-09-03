@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Food;
 use App\Models\Reservation;
 use App\Models\Foodchef;
+use App\Models\Order;
 class AdminController extends Controller
 {
     public function user()
@@ -131,7 +132,19 @@ class AdminController extends Controller
     public function deletechef($id)
     {
         $deletechef=Foodchef::find($id);
+       
         $deletechef->delete();
         return redirect()->back();
+    }
+    public function orders()
+    {
+        $data=Order::all();
+        return view('admin.order',compact('data'));
+    }
+    public function search(Request $request)
+    {
+        $search=$request->search;
+        $data=Order::where('name','LIKE','%'.$search.'%')->orwhere('foodname','LIKE','%'.$search.'%')->get();
+        return view('admin.order',compact('data')); 
     }
 }
