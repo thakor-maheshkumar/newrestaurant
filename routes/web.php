@@ -39,7 +39,12 @@ Route::post('orderconfirm',[HomeController::class,'orderconfirm']);
 
 Route::get('orders',[AdminController::class,'orders']);
 Route::get('search',[AdminController::class,'search']);
-
+Route::get('categorycreate',[AdminController::class,'categorycreate']);
+Route::post('storecategory',[AdminController::class,'storecategory']);
+Route::get('product',[AdminController::class,'product']);
+Route::post('storeproduct',[AdminController::class,'storeproduct']);
+Route::get('shop',[AdminController::class,'shop']);
+Route::get('fetchproduct/{name}',[AdminController::class,'fetchproduct']);
 Route::get('/redirects',[HomeController::class,'redirects']);
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

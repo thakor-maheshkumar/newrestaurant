@@ -8,6 +8,8 @@ use App\Models\Food;
 use App\Models\Reservation;
 use App\Models\Foodchef;
 use App\Models\Order;
+use App\Models\Category;
+use App\Models\Product;
 class AdminController extends Controller
 {
     public function user()
@@ -147,4 +149,57 @@ class AdminController extends Controller
         $data=Order::where('name','LIKE','%'.$search.'%')->orwhere('foodname','LIKE','%'.$search.'%')->get();
         return view('admin.order',compact('data')); 
     }
+    public function categorycreate()
+    {
+     
+        return view('admin.category.create');
+    }
+    public function storecategory(Request $request)
+    {
+        $category=new Category;
+        $category->name=$request->name;
+        $category->description=$request->description;
+        $category->save();
+        return redirect()->back();
+    }
+    public function product()
+    {
+        $category=Category::all();
+        $product=Product::with('category')->get();
+        
+        return view('admin.product.create',compact('category','product'));
+    }
+    public function storeproduct(Request $request)
+    {
+        $image=$request->image;
+        $imageName=time().'.'.$image->getClientOriginalExtension();
+        $image->move('foodimage',$imageName);
+        $product=new Product;
+        $product->category_id=$request->category_id;
+        $product->name=$request->name;
+        $product->price=$request->price;
+        $product->image=$imageName;
+        $product->save();
+
+        return redirect()->back();
+    }
+    public function shop()
+    {
+        $product=Product::all();
+       // dd($product);
+        return view('admin.shop.create',compact('product'));
+    }
+    public function fetchproduct($name)
+    {
+        $product=Product::where('name',$name)->with('category')->first();
+
+             return response()->json([
+                'success'=>true,
+                'product' => $product,
+            ]);
+
+
+
+    }
 }
+

@@ -36,6 +36,7 @@
    
     
      @include('admin.adminscript')
+     @stack('script')
     <!-- End custom js for this page -->
   </body>
 </html>
