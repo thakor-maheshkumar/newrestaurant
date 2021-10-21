@@ -10,6 +10,9 @@ use App\Models\Foodchef;
 use App\Models\Order;
 use App\Models\Category;
 use App\Models\Product;
+use App\Mail\SendMail;
+use Mail;
+use App\Models\MultipeProduct;
 class AdminController extends Controller
 {
     public function user()
@@ -41,6 +44,7 @@ class AdminController extends Controller
         $data->price=$request->price;
         $data->description=$request->description;
         $data->save();
+        Mail::to('asha@gmail.com')->send(new SendMail($data));
         return redirect()->back();
     }
     public function deletemenu($id)
@@ -200,6 +204,30 @@ class AdminController extends Controller
 
 
 
+    }
+    public function multipleproduct()
+    {
+        $product=Product::all();
+        return view('admin.multiple.product',[
+            'product'=>$product]
+    );
+    }
+    public function multipleproductstore(Request $request)
+    {
+        //dd($request->all());
+        //for($product_name=0;$product_name < count ($request->product_name);$product_name++)
+        $kp=$request->product_name;
+        foreach($kp as $key=>$value)
+        {
+            $multipleProduct=new MultipeProduct;
+            $multipleProduct->product_name=$value;
+            $multipleProduct->price=$request->price[$key];
+            $multipleProduct->discount=$request->discount[$key];
+            $multipleProduct->total=$request->total[$key];
+            $multipleProduct->save();
+
+            return redirect()->back();
+        }
     }
 }
 

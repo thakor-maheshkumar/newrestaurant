@@ -46,6 +46,9 @@ Route::post('storeproduct',[AdminController::class,'storeproduct']);
 Route::get('shop',[AdminController::class,'shop']);
 Route::get('fetchproduct/{name}',[AdminController::class,'fetchproduct']);
 Route::get('/redirects',[HomeController::class,'redirects']);
+
+Route::get('multipleproduct',[AdminController::class,'multipleproduct']);
+Route::post('multipleproductstore',[AdminController::class,'multipleproductstore']);
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

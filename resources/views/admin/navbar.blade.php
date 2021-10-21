@@ -75,6 +75,14 @@
               <span class="menu-title">Shop</span>
             </a>
           </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{{url('multipleproduct')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
+              <span class="menu-title">Multiple</span>
+            </a>
+          </li>
           
         </ul>
       </nav>
