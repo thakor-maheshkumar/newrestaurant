@@ -13,6 +13,7 @@ use App\Models\Product;
 use App\Mail\SendMail;
 use Mail;
 use App\Models\MultipeProduct;
+use DataTables;
 class AdminController extends Controller
 {
     public function user()
@@ -205,9 +206,21 @@ class AdminController extends Controller
 
 
     }
-    public function multipleproduct()
+    public function multipleproduct(Request $request)
     {
         $product=Product::all();
+        if($request->ajax()){
+
+            $data=MultipeProduct::select('*');
+            return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action',function($row){
+                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+                    return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
         return view('admin.multiple.product',[
             'product'=>$product]
     );
@@ -216,18 +229,33 @@ class AdminController extends Controller
     {
         //dd($request->all());
         //for($product_name=0;$product_name < count ($request->product_name);$product_name++)
-        $kp=$request->product_name;
-        foreach($kp as $key=>$value)
+        //$kp=$request->product_name;
+        for($i=0; $i < count($request->product_name);$i++)
         {
-            $multipleProduct=new MultipeProduct;
-            $multipleProduct->product_name=$value;
-            $multipleProduct->price=$request->price[$key];
-            $multipleProduct->discount=$request->discount[$key];
-            $multipleProduct->total=$request->total[$key];
+            //dd($value);
+            $multipleProduct=new MultipeProduct();
+            $multipleProduct->product_name=$request['product_name'][$i];
+            $multipleProduct->price=$request['price'][$i];
+            $multipleProduct->discount=$request['discount'][$i];
+            $multipleProduct->total=$request['total'][$i];
             $multipleProduct->save();
-
+            //
+          }
             return redirect()->back();
-        }
+        
     }
 }
 
+
+/*$id_purchase=$data->id;
+            if(isset($_POST['id_raw_product'])){
+                foreach($_POST['id_raw_product'] as $key=>$id_raw_product):
+                    $detail=new PurchaseD();
+                    $detail->id_purchase=$data->id;
+                    $detail->id_product=$id_raw_product;
+                    $detail->total=$_POST['total'][$key];
+                    $detail->price=$_POST['price'][$key];
+                    $total=$total+( $detail->total * $detail->price);
+                    $detail->save();
+                endforeach;
+            }*/
