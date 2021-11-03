@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ResourceProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,9 +47,13 @@ Route::post('storeproduct',[AdminController::class,'storeproduct']);
 Route::get('shop',[AdminController::class,'shop']);
 Route::get('fetchproduct/{name}',[AdminController::class,'fetchproduct']);
 Route::get('/redirects',[HomeController::class,'redirects']);
-
+Route::post('updatemultiple',[AdminController::class,'updatemultiple']);
 Route::get('multipleproduct',[AdminController::class,'multipleproduct']);
 Route::post('multipleproductstore',[AdminController::class,'multipleproductstore']);
+Route::get('editproduct',[AdminController::class,'editproduct']);
+Route::get('groupby',[AdminController::class,'groupby']);
+Route::get('product/edit/{id}',[AdminController::class,'productEdit']);
+Route::resource('resource',ResourceProductController::class);
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

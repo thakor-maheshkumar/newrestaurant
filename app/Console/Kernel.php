@@ -13,7 +13,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\DailyQuote::class,
+        Commands\ProductDelete::class,
+        Commands\DemoCron::class,
+        Commands\FoodRemove::class,
+        Commands\MultipleProduct::class,
     ];
 
     /**
@@ -25,6 +29,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('command:DailyQuote')
+        ->everyMinute();
+
+        $schedule->command('command:productDelete')->everyMinute();
+        $schedule->command('command:Demo')->everyMinute();
+        $schedule->command('command:FoodRemove')->everyMinute();
+        $schedule->command('command:multiple')->everyMinute();
     }
 
     /**

@@ -5,12 +5,7 @@
 		@csrf
 		<div>
 			<label>Category Name</label>
-			<select name="category_id" class="form-control">
-				<option>Select Category</option>
-				@foreach($category as $key=>$value)
-				<option value="{{$value->id}}">{{$value->name}}</option>
-				@endforeach
-			</select>
+			{{Form::select('category_id',[''=>'Select Category'] + $category, old('category_id',isset($productjk->category_id) ? $productjk->category_id :''))}}
 		</div>
 		<div>
 			<label>Product Name</label>
@@ -34,6 +29,7 @@
 			<th style="padding:30px">Product Name</th>
 			<th style="padding:30px">Price</th>
 			<th style="padding:30px">Image</th>
+			<th>Action</th>
 		
 		</tr>
 		</thead>
@@ -45,7 +41,7 @@
 			<td>{{$value->name}}</td>
 			<td>{{$value->price}}</td>
 			<td><img src="foodimage/{{$value->image}}" width="80" height="80"></td>
-			
+			<td><a class="btn btn-success" href='{{url("product/edit/{$value->id}")}}'>Edit</a></td>	
 
 		</tr>
 		@endforeach

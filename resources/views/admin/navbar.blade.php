@@ -83,6 +83,14 @@
               <span class="menu-title">Multiple</span>
             </a>
           </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{{route('resource.index')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
+              <span class="menu-title">Resource Product</span>
+            </a>
+          </li>
           
         </ul>
       </nav>

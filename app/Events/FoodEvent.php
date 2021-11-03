@@ -9,8 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Events\Event;
-class SendMail extends Event
+use App\Models\Food;
+class FoodEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,10 +19,10 @@ class SendMail extends Event
      *
      * @return void
      */
-    public $userId;
-    public function __construct($userId)
+    public $food;
+    public function __construct(Food $food)
     {
-        //
+        $this->food=$food;
     }
 
     /**

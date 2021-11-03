@@ -11,4 +11,10 @@ class MultipeProduct extends Model
 
    protected $table = 'multipe_products';
     protected $guarded = ['multipe_products'];
+
+
+    public function product()
+    {
+        return $this->belongsTo('\App\Models\Product','product_name','id');
+    }
 }

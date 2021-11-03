@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $guarded=['products'];
     use HasFactory;
 
     public function category()
     {
         return $this->belongsTo('\App\Models\Category','category_id');
+    }
+
+    public function product_items()
+    {
+        return $this->hasMany('\App\Models\ProductItem');
     }
 }

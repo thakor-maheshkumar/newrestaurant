@@ -21,11 +21,14 @@
 		</div>
 		<button type="submit" class="btn btn-success">Submit</button>
 	</form>
-</div>
+
 	<div >
-		<table class="table table-dark" style="margin-top: 550px;margin-left:-80px;">
+		<table class="table table-dark" style="margin-top: 100px;margin-left:70px;width: 50px;" >
+			<input type="text" name="start_date" style="margin-left: 300px;" placeholder="Start Date" class="start_date" id="start_date">
+			<input type="text" name="end_date" placeholder="End Date" class="end_date" id="end_date">
   <thead>
     <tr>
+
       <th scope="col">Food Name</th>
       <th scope="col">Price</th>
       <th scope="col">Image</th>
@@ -34,7 +37,9 @@
     </tr>
   </thead>
   <tbody>
+
   	@foreach($data as $key=>$value)
+
     <tr>
       <th scope="row">{{$value->title}}</th>
       <td>{{$value->price}}</td>
@@ -48,6 +53,6 @@
 </table>
 	</div>
 
-
+</div>
 
 @endsection

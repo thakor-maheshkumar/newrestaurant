@@ -11,9 +11,19 @@ use App\Models\Order;
 use App\Models\Category;
 use App\Models\Product;
 use App\Mail\SendMail;
+use App\Mail\MultipleMail;
+use App\Mail\SingleMail;
 use Mail;
+use App\Events\PostCreated;
 use App\Models\MultipeProduct;
 use DataTables;
+use App\Events\FoodEvent;
+use App\Events\MultipleEvent;
+use App\Mail\ProductEmail;
+use Auth;
+use Notification;
+use App\Notifications\OffersNotification;
+use DB;
 class AdminController extends Controller
 {
     public function user()
@@ -45,7 +55,8 @@ class AdminController extends Controller
         $data->price=$request->price;
         $data->description=$request->description;
         $data->save();
-        Mail::to('asha@gmail.com')->send(new SendMail($data));
+       // Mail::to('asha@gmail.com')->send(new SendMail($data));
+        event(new FoodEvent($data));
         return redirect()->back();
     }
     public function deletemenu($id)
@@ -109,6 +120,8 @@ class AdminController extends Controller
         $foodchef->speciality=$request->speciality;
         $foodchef->image=$imagename;
         $foodchef->save();
+        event(new PostCreated($foodchef));
+        //PostCreated::dispatch($foodchef);
         return redirect()->back();
     }
     public function editchef($id)
@@ -169,13 +182,18 @@ class AdminController extends Controller
     }
     public function product()
     {
-        $category=Category::all();
-        $product=Product::with('category')->get();
-        
-        return view('admin.product.create',compact('category','product'));
+        $category=Category::pluck('name','id')->toArray();
+        //dd($category);
+        $product=Product::all();
+         //dd($product);   
+        return view('admin.product.create',[
+            'category'=>$category,
+            'product'=>$product
+        ]);
     }
     public function storeproduct(Request $request)
     {
+        $userSchema=Auth::user();
         $image=$request->image;
         $imageName=time().'.'.$image->getClientOriginalExtension();
         $image->move('foodimage',$imageName);
@@ -184,8 +202,10 @@ class AdminController extends Controller
         $product->name=$request->name;
         $product->price=$request->price;
         $product->image=$imageName;
+       /* Mail::to('cs@gmail.com')->send(new ProductEmail($product));*/
+        
         $product->save();
-
+        //Notification::send($userSchema, new OffersNotification($product));
         return redirect()->back();
     }
     public function shop()
@@ -211,12 +231,13 @@ class AdminController extends Controller
         $product=Product::all();
         if($request->ajax()){
 
-            $data=MultipeProduct::select('*');
+            $data=MultipeProduct::with('product');
             return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action',function($row){
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
-                    return $btn;
+                    $btn = '<a href="javascript:void(0)" class="view btn btn-primary btn-sm">View</a>';
+                    $edit = '<a href="#"  type="button" class="editData btn btn-success btn-sm" data-id='.$row->id.'>edit</a>';
+                    return $btn .$edit;
                     })
                     ->rawColumns(['action'])
                     ->make(true);
@@ -239,10 +260,57 @@ class AdminController extends Controller
             $multipleProduct->discount=$request['discount'][$i];
             $multipleProduct->total=$request['total'][$i];
             $multipleProduct->save();
+
             //
           }
+            //Mail::to('am@gmail.com')->send(new MultipleMail());
+           //Mail::to('test@gmail.com')->send(new SingleMail($multipleProduct));
+            event(new MultipleEvent($multipleProduct));
             return redirect()->back();
         
+    }
+    public function editproduct(Request $request)
+    {
+        $data=MultipeProduct::where('id',$request->id)->with('product')->first();
+        return response()->json([
+            'data'=>$data,
+        ]);
+    }
+    public function updatemultiple(Request $request)
+    {
+        //dd($request->all());
+        $id=$request->id;
+        $multipleProductupdate=MultipeProduct::find($id);
+        
+        $multipleProductupdate->product_name=$request->product_name ?? 5;
+        $multipleProductupdate->price=$request->price;
+        $multipleProductupdate->discount=$request->discount;
+        $multipleProductupdate->total=$request->total;
+        $multipleProductupdate->save();
+        return json_encode(array('statusCode'=>200));
+    }
+    public function groupby()
+    {
+        $multiple=MultipeProduct::select("*",DB::raw("count(*) as total"))
+                                ->groupBy('country')
+                                ->get();
+        dd($multiple);
+       return view('admin.groupby',[
+        'multiple'=>$multiple
+       ]);
+        
+    }
+    public function productEdit($id)
+    {
+        $category=Category::pluck('name','id')->toArray();
+        $productjk=Product::with('category')->find($id);
+        $product=Product::all();
+        //dd($product);
+        return view('admin.product.create',[
+            'productjk'=>$productjk,
+            'category'=>$category,
+            'product'=>$product
+        ]);
     }
 }
 

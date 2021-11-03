@@ -1,0 +1,1 @@
+<p>Mail Testing Here {{$multipleProduct->total}}</p>
